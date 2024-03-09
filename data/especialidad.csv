@@ -1,0 +1,42 @@
+"idespecialidad";"nombreespecialidad";"nombreespecialidad_a";"especial";"codigo"
+"10";"RECURSOS HUMANOS";"recursos-humanos";NULL;NULL
+"11";"FCT - INSTALACIONES DE TELECOMUNICACIONES (ELE203)";"fct-instalaciones-de-telecomunicaciones-ele203";"1";"2GMC"
+"2";"ALQUILER";"alquiler";NULL;NULL
+"3";"FCT - AUTOMOCIÓN (TMV301)";"fct-automocian-tmv301";"1";"2GSJ"
+"4";"CALIDAD";"calidad";"1";NULL
+"5";"ELECTRICIDAD";"electricidad";NULL;NULL
+"6";"ELECTRÓNICA";"electronica";NULL;NULL
+"7";"IDIOMAS";"idiomas";NULL;NULL
+"8";"INFORMÁTICA Y NUEVAS TECNOLOGÍAS";"informatica-y-nuevas-tecnologaas";NULL;NULL
+"9";"ORIENTACIÓN";"orientacion";NULL;NULL
+"14";"SOLDADURA";"soldadura";NULL;NULL
+"13";"CHAPA Y PINTURA";"chapa-y-pintura";NULL;NULL
+"16";"DISEÑO INDUSTRIAL Y CAD";"diseno-industrial-y-cad";NULL;NULL
+"17";"MECÁNICA DE MOTOCICLETAS";"mecanica-de-motocicletas";NULL;NULL
+"20";"MECANICA";"mecanica";"0";NULL
+"21";"FCT - AUTOMATIZACIÓN Y ROBÓTICA INDUSTRIAL (ELE303)";"fct-automatizacian-y-robatica-industrial-ele303";"1";"2GSF"
+"22";"FCT - DESARROLLO DE APLICACIONES MULTIPLATAFORMA (IFC302)";"fct-desarrollo-de-aplicaciones-multiplataforma-ifc302";"1";"2GSH"
+"23";"FCT - ELECTROMECÁNICA DE VEHÍCULOS AUTOMÓVILES (TMV202)";"fct-electromecanica-de-vehaculos-automaviles-tmv202";"1";"2GMD"
+"24";"FCT - INSTALACIONES ELÉCTRICAS Y AUTOMÁTICAS (ELE202)";"fct-instalaciones-elactricas-y-automaticas-ele202";"1";"2GMB"
+"25";"FCT - MECANIZADO (FME202)";"fct-mecanizado-fme202";"1";"2GMA"
+"26";"FCT - PROGRAMACIÓN DE LA PRODUCCIÓN EN FABRICACIÓN MECÁNICA (FME304)";"fct-programacian-de-la-produccian-en-fabricacian-mecanica-fme304";"1";"2GSM"
+"27";"FCT - SISTEMAS DE TELECOMUNICACIONES E INFORMÁTICA (ELE304)";"fct-sistemas-de-telecomunicaciones-e-informatica-ele304";"1";"2GSG"
+"28";"FCT - SISTEMAS ELECTROTÉCNICOS Y AUTOMATIZADOS (ELE302)";"fct-sistemas-electrotacnicos-y-automatizados-ele302";"1";"2GSK"
+"29";"FCT - SISTEMAS MICROINFORMÁTICOS Y REDES (IFC201)";"fct-sistemas-microinformaticos-y-redes-ifc201";"1";"2GME"
+"31";"FCT - FP BÁSICA ELECTRICIDAD Y ELECTRÓNICA (FPB102)";"fct-fp-basica-electricidad-y-electranica-fpb102";"1";"2FPBA"
+"32";"FCT - FP BÁSICA INFORMÁTICA Y COMUNICACIONES (FPB104)";"fct-fp-basica-informatica-y-comunicaciones-fpb104";"1";"2FPBB"
+"33";"FCT - AUTOMOCIÓN DUAL (TMV301)";"fct-automocian-dual-tmv301";"1";"2GSJ-D"
+"34";"INDUSTRIAL";"industrial";NULL;NULL
+"35";"MARKETING Y VENTAS";"marketing-y-ventas";NULL;NULL
+"36";"DISEÑO GRÁFICO Y WEB";"diseao-grafico-y-web";NULL;NULL
+"37";"INTERNET Y REDES SOCIALES";"internet-y-redes-sociales";NULL;NULL
+"38";"GESTIÓN Y DIRECCIÓN EMPRESARIAL";"gestian-y-direccian-empresarial";NULL;NULL
+"39";"CALIDAD Y MEDIO AMBIENTE";"calidad-y-medio-ambiente";NULL;NULL
+"40";"SECTOR INDUSTRIAL";"sector-industrial";NULL;NULL
+"41";"HOSTELERÍA Y TURISMO";"hosteleraa-y-turismo";NULL;NULL
+"42";"SEGURIDAD ALIMENTARIA";"seguridad-alimentaria";NULL;NULL
+"43";"AUTOMOCIÓN";"automocian";NULL;NULL
+"44";"RIESGOS LABORALES";"riesgos-laborales";NULL;NULL
+"45";"OFIMÁTICA";"OFIMATICA";NULL;NULL
+"47";"TELECOMUNICACIÓN";"telecomunicacian";NULL;NULL
+"48";"ROBÓTICA";"robatica";NULL;NULL

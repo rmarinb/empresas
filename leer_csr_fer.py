@@ -1,9 +1,18 @@
 import pandas as pd;
 
-df = pd.DataFrame();
 
-df = pd.read_csv('data/clientes.csv', sep=';');
 
-df.to_excel('data/text.xlsx')
+# Cogemos los datos de las empresas
+df_empresa = pd.DataFrame();
+df_empresa = pd.read_csv('data/empresas.csv', sep=';');
+# df_empresa.to_excel('data/text_empresas.xlsx')
 
-print(df);
+#for col in df_empresa:
+#	print(df_empresa[col])
+
+# Recorremos el dataframe de las empresas 
+for indice_fila, fila in df_empresa.iterrows():
+	print(indice_fila)
+	print(fila)
+
+
