@@ -1,18 +1,18 @@
 import  pandas as pd
 import  MySQLdb
+from sqlalchemy import create_engine
+#import  mysql.conector as sql 
 
-especialidades = pd.DataFrame();
-especialidades = pd.read_csv('data/especialidad.csv',sep=';',encoding='ISO-8859-1');
-especialidades.to_excel('data/text_especialidades.xlsx');
+especialidades = pd.DataFrame()
+especialidades = pd.read_csv('data/especialidad.csv',sep=';',encoding='ISO-8859-1', index_col=0)
+especialidades = especialidades.drop(columns=['nombreespecialidad_a'])
+print (especialidades.head(3))
+#especialidades.to_excel('data/text_especialidades.xlsx');
 
+engine = create_engine('mysql+mysqlconnector://root:root@localhost/empresas')
+engine = engine.execution_options(autocommit=True)
+especialidades.to_sql('especialidad',con=engine, if_exists='append')
 
-db = MySQLdb.connect(host="localhost",      # tu host, usualmente localhost
-                     user="root",           # tu usuario
-                     passwd="root",         # tu password
-                     db="empresas")         # el nombre de la base de datos
+#db.close();
 
-
-especialidades.to_sql(con=db, name='especialidad', if_exists='replace', flavor='mysql')
-
-db.close();
 
