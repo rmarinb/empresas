@@ -10,6 +10,9 @@ f.write('******Empezamos con las empresas')
 # Cogemos los datos de las empresas
 df_empresa = pd.DataFrame()
 df_empresa = pd.read_csv('data/empresas.csv', sep=';')
+
+df_empresa = df_empresa.fillna(0)
+
 df_empresa.to_excel('data/excel_empresas.xlsx')
 
 # Conectamos a la BBDD 
@@ -23,23 +26,23 @@ cursor = conn.cursor()
 
 # Recorremos el dataframe de las empresas y realizamos el algoritmo 
 for i in range(len(df_empresa)):
+
 	cifempresa 		= df_empresa.iloc[i]['cif']  
 	nombreempresa 	= df_empresa.iloc[i]['nombre']   
-	print("el cif es: ")
-	print(cifempresa)
-	print("el nombre es: ")
-	print(nombreempresa)
-	if cifempresa is None:
-   		 print("La variable es nula.")
+	print("el cif es: ", cifempresa)
+	print("el nombre es: ", nombreempresa)	
+	
+	if cifempresa is None or  cifempresa == 0:
+   		print("La variable es nula.")		
 	else:
-    	print("La variable no es nula y tiene el valor:", cifempresa)
-		consulta="SELECT idempresa FROM ge_empresas WHERE cif  =%s"
-		cursor.execute(consulta, (cifempresa,))
-
-	# Obtener los resultados de la consulta
-	resultados = cursor.fetchall()
-	for resultado in resultados:
-		print(resultado)
+		print("La variable no es nula y tiene el valor:", cifempresa)
+		f.write('1. No tiene CIF, vamos a trabajar con su nombre:')
+		cursor.execute("SELECT idempresa FROM ge_empresas WHERE cif= %s", (cifempresa,))
+				
+		# Obtener los resultados de la consulta
+		resultados = cursor.fetchall()
+		for resultado in resultados:
+			print(resultado)
 
 cursor.close()
 conn.close()
