@@ -31,7 +31,8 @@ cursor = conn.cursor()
 for i in range(len(df_empresa)):
 
 	cifempresa 		= df_empresa.iloc[i]['cif']  
-	nombreempresa 	= df_empresa.iloc[i]['nombre']   
+	nombreempresa 	= df_empresa.iloc[i]['nombre'] 
+	  
 	print("el cif es: ", cifempresa)
 	print("el nombre es: ", nombreempresa)	
 	
