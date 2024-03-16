@@ -1,3 +1,6 @@
+
+# Importamos las empresas desde el csv a la bbdd de empresas, tabla GE_EMPRESAS 
+
 import 	pandas as pd
 import  MySQLdb
 from    sqlalchemy import create_engine
@@ -33,10 +36,10 @@ for i in range(len(df_empresa)):
 	print("el nombre es: ", nombreempresa)	
 	
 	if cifempresa is None or  cifempresa == 0:
-   		print("La variable es nula.")		
+   		f.write('1. No tiene CIF, vamos a trabajar con su nombre:')
+		print("La variable es nula.")		
 	else:
-		print("La variable no es nula y tiene el valor:", cifempresa)
-		f.write('1. No tiene CIF, vamos a trabajar con su nombre:')
+		print("La variable no es nula y tiene el valor:", cifempresa)		
 		cursor.execute("SELECT idempresa FROM ge_empresas WHERE cif= %s", (cifempresa,))
 				
 		# Obtener los resultados de la consulta
