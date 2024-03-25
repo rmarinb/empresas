@@ -17,8 +17,6 @@ df_contactos = pd.read_csv('data/contactos.csv', sep=';')
 df_contactos = df_contactos.fillna(0)
 df_contactos.to_excel('data/excel_contactos.xlsx')
 
-"""
-
 # 02 - Conectamos a la BBDD 
 conn = mysql.connector.connect(
     host='localhost',
@@ -27,7 +25,7 @@ conn = mysql.connector.connect(
     database='empresas'
 )
 cursor = conn.cursor()
-
+"""
 # 03 - Recorremos el dataframe de los contactos y realizamos la comprobación de existencia del contacto en la tabla de ge_contactos
 for i in range(len(df_contactos)):
 
@@ -97,3 +95,5 @@ cursor.close()
 conn.close()
 """
 fc.close()
+
+# Esto es un cometnario 
