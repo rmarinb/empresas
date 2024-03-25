@@ -7,6 +7,17 @@ from    sqlalchemy import create_engine
 from 	datetime import datetime
 import 	mysql.connector
 
+# Función que devuelve el siguiente IDEMPRESA menor que 3000 (los mayores que 3000 son PDB)
+def f_dame_id_empresa():
+	cursoridempresa = conn.cursor()
+	cursoridempresa.execute("SELECT max(idempresa) FROM ge_empresas WHERE idempresa < 3000")
+	resultados = cursor.fetchall()
+	for resultado in resultados:
+		newidempresa = resultado[0]
+		print('07 - El nuevo IDEMPRESA retornado ES: ', newidempresa)
+		f.write('07 - El nuevo  IDEMPRESA retornado ES:' + newidempresa)
+	return newidempresa		
+
 # Funcion que da de alta la empresa que recibe por parámetro
 def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web):
 		f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n')
@@ -18,8 +29,16 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web):
 		if (fechaconvenio==0):
 			fechaconvenio= datetime.now()
 
-		sql = "INSERT INTO ge_empresas (cif, empresa, observaciones, convenio, fechaconvenio, web) VALUES (%s, %s, %s, %s, %s, %s)"
-		val = (cif, nombre, "** PRUEBAS **", convenio, fechaconvenio, web)
+		if (web == 0.0):
+			web = ' '
+
+		if (convenio == 0.0):
+			convenio = 0
+
+		idempresanew = f_dame_id_empresa()
+
+		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+		val = (idempresanew, cif, nombre, "** PRUEBAS **", convenio, fechaconvenio, web)
 		curinsert.execute(sql, val)
 		conn.commit()
 
