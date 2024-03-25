@@ -34,4 +34,15 @@ INSERT INTO `empresas`.`especialidad` (`idespecialidad`, `nombreespecialidad`, `
 INSERT INTO `empresas`.`especialidad` (`idespecialidad`, `nombreespecialidad`, `codigo`, `codespecialidad`) VALUES ('62', 'SISTEMAS ELECTROTÉCNICOS Y AUTOMATIZADOS DUAL', '2GSK', 'ELE302D');
 INSERT INTO `empresas`.`especialidad` (`idespecialidad`, `nombreespecialidad`, `codigo`, `codespecialidad`) VALUES ('63', 'SISTEMAS MICROINFORMÁTICOS Y REDES DUAL', '2GME', 'IFC201D');
 
+# Metemos una especialidad de FORMACION 
+INSERT INTO `empresas`.`especialidad` (`idespecialidad`, `nombreespecialidad`) VALUES ('49', 'ESCUELA - EMPRESA');
+UPDATE `empresas`.`especialidad` SET `codespecialidad` = 'FORM' WHERE (`idespecialidad` = '49');
+
+
+# Metemos los campos para las empresas de empresa-escuela 
+ALTER TABLE `empresas`.`ge_empresas` 
+ADD COLUMN `interesadobolsa` TINYINT NULL AFTER `observaciones`,
+ADD COLUMN `PDB` TINYINT NULL AFTER `interesadobolsa`,
+ADD COLUMN `cliente` TINYINT NULL AFTER `PDB`,
+ADD COLUMN `proveedor` VARCHAR(45) NULL AFTER `cliente`;
 
