@@ -7,7 +7,27 @@ from    sqlalchemy import create_engine
 import 	mysql.connector
 import	02_importar_empresas 
 
-def	f_alta_contactos(domicilio, telefono1, telefono2, departamento, cargo, nombre, dni, especialidad):
+def f_update_contacto(fc, conn, contacto, especialidad):
+	
+	fc.write('07 - Vamos a actualizar el contacto:  ' + contacto +  '\n')
+	print("07 - Vamos a actualizar el contacto: ", contacto)
+
+	curupdate = conn.cursor()
+	
+	especialidad += ' / FORM'
+
+	sql = "UPDATE ge_contactos SET especialidad = %s WHERE idcontacto = %s"
+	val = (especialidad, contacto)
+	
+	curupdate.execute(sql, val)
+	conn.commit()
+
+	print("07 - Registro actualizado del contacto: " , contacto)
+	fc.write('06 - Registro actualizado del contacto '+ contacto + '************ \n')
+
+	curupdate.close()
+
+def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, cargo, nombre, dni, especialidad, email):
 	
 	if telefono1 !=0:
 		telefono = telefono1
@@ -35,37 +55,22 @@ def	f_alta_contactos(domicilio, telefono1, telefono2, departamento, cargo, nombr
 		especialida = f_dame_especialidad(especialidad)
 	else:
 		especialida = ' '
+	
+	fc.write('06 - Vamos a insertar el contacto con los datos:  ' + nombr + ' ' + dn + ' ' + carg + ' ' + especialida +  '\n')
+	print("06 - Vamos a insertar el contacto con los datos: ", nombr)
 
-	"""
-	f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n')
-		f.write('06 - Vamos a insertar la empresa con nombre:  ' + nombre + '\n')
-		print("06 - Vamos a insertar los datos de la empresa: ", nombre)
-		
-		curinsert = conn.cursor()
+	curinsert = conn.cursor()
+	
+	sql = "INSERT INTO ge_contactos (iddomicilio, dni, nombre, email, telefono, cargo, observaciones, especialidad, departamento) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+	val = (domicilio, dn, nombr, email, telefono, carg, 'De escuela empresa', especialida, departament)
+	
+	curinsert.execute(sql, val)
+	conn.commit()
 
-		if (fechaconvenio==0):
-			fechaconvenio= datetime.now()
+	print("06 - Registro insertado con el contacto: " , nombr)
+	fc.write('06 - Registro insertaco con el contacto '+ nombr + '************ \n')
 
-		if (web == 0.0):
-			web = ' '
-
-		if (convenio == 0.0):
-			convenio = 0
-
-		idempresanew = f_dame_id_empresa()
-
-		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
-		curinsert.execute(sql, val)
-		conn.commit()
-
-		print("06 - Registro insertado con la empresa: " , nombre)
-		f.write('06 - El registro ha sido insertado correctamente '+ nombre + '************ \n')
-		fi.write('Insertado:  ' + cif + ' ' + nombre + '\n')
-		curinsert.close()
-
-		return idempresanew
-	"""
+	curinsert.close()
 
 def f_contactos(cliente, domicilio):
 
@@ -92,7 +97,7 @@ def f_contactos(cliente, domicilio):
 	cursor = conn.cursor()
 
 	# 03 - Buscamos los contactos que haya en el dataframe para el cliente pasado por parámetro
-	df_filtered = df_contactos[df_contactos['idcliente']=cliente]]
+	df_filtered = df_contactos[df_contactos['idcliente']]=cliente]
 
 	if df_filtered.count()==0:
 		return
@@ -109,25 +114,29 @@ def f_contactos(cliente, domicilio):
 			fc.write('05 - Vamos a comprobar el email: '+ email)
 			print("05 - Vamos a comprobar el email: ", email)		
 
-			cursor.execute("SELECT CAST(idcontacto as char) FROM ge_contactos WHERE email like %s", ("%" + email + "%",))
+			cursor.execute("SELECT CAST(idcontacto as char), especialidad  FROM ge_contactos WHERE email like %s", ("%" + email + "%",))
 			resultados = cursor.fetchall()
 		
 			# 05a - No existe el registro en la BBDD, lo tenemos que dar de alta 
 			if len(resultados) == 0:
 				fc.write('05a - No existe el email, lo damos de alta' )
 				print("05a - No existe el email, lo damos de alta" )		
-				f_alta_contacto(domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'])
+				f_alta_contacto(conn, fc, domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'], email)
+			else:
+				f_update_contacto(fc, conn, resultados[0], resultados[1])
 
 		# 06 - El email no está informado. Metemos el contacto si o si
 		else:
 			fc.write('04 - No tiene email, damos de alta el contacto' )
 			print("04 - No tiene email, damos de alta el contacto" )						
-			f_alta_contacto(domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'])
+			f_alta_contacto(conn, fc, domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'], email)
 
-		
-# 99 - Cerramos todo lo que quede abierto 			
-cursor.close()
-conn.close()
-fc.close()
+	fc.close()
+	cursor.close()
+	conn.close()
+
+
+
+
 
 
