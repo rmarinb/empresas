@@ -46,3 +46,6 @@ ADD COLUMN `PDB` TINYINT NULL AFTER `interesadobolsa`,
 ADD COLUMN `cliente` TINYINT NULL AFTER `PDB`,
 ADD COLUMN `proveedor` VARCHAR(45) NULL AFTER `cliente`;
 
+# En contactos metemos el departamento para poder volcar los datos de escuela-empresa 
+ALTER TABLE `empresas`.`ge_contactos` 
+ADD COLUMN `departamento` VARCHAR(45) NULL AFTER `especialidad`;

@@ -5,95 +5,129 @@ import 	pandas as pd
 import  MySQLdb
 from    sqlalchemy import create_engine
 import 	mysql.connector
+import	02_importar_empresas 
 
-# 00 - Generamos el archivo de salida para llevar registro del LOG: archivo-salida.py
-fc = open ('data/log_salida_contactos.txt','w')
-fc.write('****** EMPEZAMOS CON LOS CONTACTOS '+ '\n')
-
-# 01 - Cogemos los datos de los contactos y los pasamos a un excel 
-df_contactos = pd.DataFrame()
-df_contactos = pd.read_csv('data/contactos.csv', sep=';')
-
-df_contactos = df_contactos.fillna(0)
-df_contactos.to_excel('data/excel_contactos.xlsx')
-
-# 02 - Conectamos a la BBDD 
-conn = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='root',
-    database='empresas'
-)
-cursor = conn.cursor()
-"""
-# 03 - Recorremos el dataframe de los contactos y realizamos la comprobación de existencia del contacto en la tabla de ge_contactos
-for i in range(len(df_contactos)):
-
-	cifempresa 		= df_empresa.iloc[i]['cif']  
-	nombreempresa 	= df_empresa.iloc[i]['nombre'] 
-	  
-	print("03 - ************************************************* DATOS DE LA EMPRESA ******** " ,  nombreempresa ,  cifempresa )
-	f.write("03 - ************************************************* DATOS DE LA EMPRESA ******** " +  nombreempresa + " - " + str(cifempresa) + "\n" )
-
-	if cifempresa is None or  cifempresa == 0:
-		print("03 - No tiene CIF, vamos a trabajar con su nombre" , nombreempresa)		
-		f.write("03 -  No tiene CIF, vamos a trabajar con su nombre: " +  nombreempresa + "\n" )
-		
-		# 03a - Miramos si existe o no en la bbdd po nombre
-		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE empresa like %s", ("%" + nombreempresa+ "%",))
-
-		resultados = cursor.fetchall()
-		for resultado in resultados:
-			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', resultado[0])
-			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + resultado[0])
-			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + resultado[0] + '\n')
-
-		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
-		if len(resultados)==0:
-			
-			if df_empresa.iloc[i]['apellidos'] != 0:
-				nombrecompleto = nombreempresa + ' ' + df_empresa.iloc[i]['apellidos'] 
-			else:
-				nombrecompleto = nombreempresa
-
-			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
-				nombrecompleto += ' ' + df_empresa.iloc[i]['razonsocial'] 
-			
-			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
-			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
-			f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+def	f_alta_contactos(domicilio, telefono1, telefono2, departamento, cargo, nombre, dni, especialidad):
+	
+	if telefono1 !=0:
+		telefono = telefono1
 	else:
+		telefono = ' ' 
+	if telefono2 !=0:
+		telefono += telefono2
+	if departamento !=0:
+		departament = departamento
+	else:
+		departament = ' '
+	if cargo !=0:
+		carg = cargo
+	else:
+		carg = ' ' 
+	if nombre !=0:
+		nombr = nombre
+	else:
+		nombr = ' '
+	if dni !=0:
+		dn = dni
+	else:
+		dn = ' ' 
+	if especialidad !=0:
+		especialida = f_dame_especialidad(especialidad)
+	else:
+		especialida = ' '
+
+	"""
+	f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n')
+		f.write('06 - Vamos a insertar la empresa con nombre:  ' + nombre + '\n')
+		print("06 - Vamos a insertar los datos de la empresa: ", nombre)
 		
-		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
-		print("04 - La variable no es nula y tiene el valor:", cifempresa)		
-		f.write('04 - ********************** CIF:' +  cifempresa + '\n') 
-		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE cif= %s", (cifempresa,))
-				
-		# 05 - Obtener los datos de la empresa existente o no en la tabla
-		resultados = cursor.fetchall()
-		for resultado in resultados:			
-			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', resultado[0])
-			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + resultado[0])
-			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + resultado[0] + '\n')
+		curinsert = conn.cursor()
 
-		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 
-		if len(resultados)==0:			
-			if df_empresa.iloc[i]['apellidos'] != 0:
-				nombrecompleto = nombreempresa + ' ' + df_empresa.iloc[i]['apellidos'] 
-			else:
-				nombrecompleto = nombreempresa
+		if (fechaconvenio==0):
+			fechaconvenio= datetime.now()
 
-			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
-				nombrecompleto += ' ' + df_empresa.iloc[i]['razonsocial'] 
+		if (web == 0.0):
+			web = ' '
 
-			idempresanew = f_alta_empresa(df_empresa.iloc['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
-			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
-			f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+		if (convenio == 0.0):
+			convenio = 0
 
+		idempresanew = f_dame_id_empresa()
+
+		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
+		curinsert.execute(sql, val)
+		conn.commit()
+
+		print("06 - Registro insertado con la empresa: " , nombre)
+		f.write('06 - El registro ha sido insertado correctamente '+ nombre + '************ \n')
+		fi.write('Insertado:  ' + cif + ' ' + nombre + '\n')
+		curinsert.close()
+
+		return idempresanew
+	"""
+
+def f_contactos(cliente, domicilio):
+
+	# 00 - Generamos el archivo de salida para llevar registro del LOG: archivo-salida.py
+	fc = open ('data/log_salida_contactos.txt','w')
+	fc.write('00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente' + cliente +  '\n')
+	print("00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente ", cliente)
+
+	# 01 - Cogemos los datos de los contactos y los pasamos a un excel 
+	df_contactos = pd.DataFrame()
+	df_contactos = pd.read_csv('data/contactos.csv', sep=';')
+
+	df_contactos = df_contactos.fillna(0)
+	df_contactos.to_excel('data/excel_contactos.xlsx')
+
+	# 02 - Conectamos a la BBDD 
+	conn = mysql.connector.connect(
+    	host='localhost',
+    	user='root',
+    	password='root',
+    	database='empresas'
+	)
+	
+	cursor = conn.cursor()
+
+	# 03 - Buscamos los contactos que haya en el dataframe para el cliente pasado por parámetro
+	df_filtered = df_contactos[df_contactos['idcliente']=cliente]]
+
+	if df_filtered.count()==0:
+		return
+	
+	fc.write('03 - Contactos del cliente: '+ cliente + ' son' + df_filtered.count())
+	print("03 - ****** Número contactos del cliente  ", df_filtered.count())
+
+	# 04 - Recorremos el listado de contactos filtrado 
+	for i in range(len(df_filtered)):
+		email = df_filtered.iloc[i]['email']
+
+		if email != 0:
+			# 05 - Comprobamos si existe el contacto en la bbdd por email
+			fc.write('05 - Vamos a comprobar el email: '+ email)
+			print("05 - Vamos a comprobar el email: ", email)		
+
+			cursor.execute("SELECT CAST(idcontacto as char) FROM ge_contactos WHERE email like %s", ("%" + email + "%",))
+			resultados = cursor.fetchall()
+		
+			# 05a - No existe el registro en la BBDD, lo tenemos que dar de alta 
+			if len(resultados) == 0:
+				fc.write('05a - No existe el email, lo damos de alta' )
+				print("05a - No existe el email, lo damos de alta" )		
+				f_alta_contacto(domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'])
+
+		# 06 - El email no está informado. Metemos el contacto si o si
+		else:
+			fc.write('04 - No tiene email, damos de alta el contacto' )
+			print("04 - No tiene email, damos de alta el contacto" )						
+			f_alta_contacto(domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] ,email, df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'])
+
+		
 # 99 - Cerramos todo lo que quede abierto 			
 cursor.close()
 conn.close()
-"""
 fc.close()
 
-# Esto es un cometnario 
+

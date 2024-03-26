@@ -6,6 +6,7 @@ import  MySQLdb
 from    sqlalchemy import create_engine
 from 	datetime import datetime
 import 	mysql.connector
+import	02_importar_contactos 
 
 # Función que da de alta los contactos de una empresa
 # def f_alta_contactos(idempresa):
@@ -36,6 +37,7 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	for resultado in resultados:
 		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', resultado[0])
 		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + resultado[0])		
+		return resultado[0]
 
 	# 08 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 	if len(resultados)==0:
@@ -47,8 +49,17 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 
 		print("08 - Registro insertado con la dirección: " , email)
 		f.write('08 - El registro ha sido insertado correctamente para la dirección '+ domicilio + ' de la empresa ' + idempresa +'  \n')		
-		curinsert = conn.cursor()
+		
+		# Buscamos el código del a dirección que se acaba de insertar
+		cursordireccion.execute("SELECT max(iddomicilio as char) FROM ge_domicilios")
 
+		resultados = cursordireccion.fetchall()
+		if len(resultados) != 0: 
+			return resultado[0]
+		else:
+			return -1 
+
+	curinsert.close()
 	cursordireccion.close()	
 
 # Función que devuelve el siguiente IDEMPRESA menor que 3000 (los mayores que 3000 son PDB)
@@ -66,6 +77,7 @@ def f_dame_id_empresa():
 
 # Funcion que da de alta la empresa que recibe por parámetro
 def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, interesados, pdb, cliente, proveedor):
+		
 		f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n')
 		f.write('06 - Vamos a insertar la empresa con nombre:  ' + nombre + '\n')
 		print("06 - Vamos a insertar los datos de la empresa: ", nombre)
@@ -153,7 +165,8 @@ for i in range(len(df_empresa)):
 			
 			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
-			f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+			f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
 	else:
 		
 		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
@@ -180,7 +193,8 @@ for i in range(len(df_empresa)):
 
 			idempresanew = f_alta_empresa(df_empresa.iloc['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
-			f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
+			f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
 
 # 99 - Cerramos todo lo que quede abierto 			
 cursor.close()
