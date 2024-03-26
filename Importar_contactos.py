@@ -97,7 +97,7 @@ def f_contactos(cliente, domicilio):
 	cursor = conn.cursor()
 
 	# 03 - Buscamos los contactos que haya en el dataframe para el cliente pasado por parámetro
-	df_filtered = df_contactos[df_contactos['idcliente']]=cliente]
+	df_filtered = df_contactos[df_contactos['idcliente']]=cliente
 
 	if df_filtered.count()==0:
 		return

@@ -116,10 +116,10 @@ fe = open ('data/encontrados.txt','w')
 
 # 01 - Cogemos los datos de las empresas y los pasamos a un excel 
 df_empresa = pd.DataFrame()
-df_empresa = pd.read_csv('data/empresas_copy.csv', sep=';')
+df_empresa = pd.read_csv('data/empresas.csv', sep=';')
 
 df_empresa = df_empresa.fillna(0)
-df_empresa.to_excel('data/excel_empresas_copy.xlsx')
+df_empresa.to_excel('data/excel_empresas.xlsx')
 
 # 02 - Conectamos a la BBDD 
 conn = mysql.connector.connect(
@@ -150,7 +150,7 @@ for i in range(len(df_empresa)):
 		for resultado in resultados:
 			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', resultado[0])
 			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + resultado[0])
-			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + resultado[0] + '\n')
+			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + resultado[0] + '\n')
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:
