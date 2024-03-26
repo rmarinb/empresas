@@ -17,10 +17,8 @@ def f_dame_especialidad(idespecial):
 	resultados = cursorespecial.fetchall()
 
 	for resultado in resultados:
-		codigo += '/ ' + resultado[0] 	
+		codigo += '/ ' + str(resultado[0]) 	
 
-	print('09 - La especialidad  ES: ', codigo)
-	f.write('09 - La especialidad ES:' + codigo)
 	cursorespecial.close()
 	return codigo		
 
@@ -29,16 +27,24 @@ def f_dame_especialidad(idespecial):
 def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad):
 	# 08 - Miramos si existe o no en la bbdd por email
 	cursordireccion = conn.cursor()
-	cursordireccion.execute("SELECT CAST(iddomicilio as char) FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
-
+	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 	resultados = cursordireccion.fetchall()
 	for resultado in resultados:
-		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', resultado[0])
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + resultado[0])		
-		return resultado[0]
+		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', str(resultado[0]))
+		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]))		
+		cursordireccion.close()	
+		return str(resultado[0])
 
 	# 08 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 	if len(resultados)==0:
+
+		# El campo del CP está acortado a 5 
+		if len(str(cp)) > 5:
+			cp = cp[:5]
+
+		email = str(email)[:59]
+		telefono = str(telefono)[:49]
+
 		curinsert = conn.cursor()
 		sql = "INSERT INTO ge_domicilios(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 		val = (idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad)
@@ -52,8 +58,12 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 		cursordireccion.execute("SELECT max(iddomicilio) FROM ge_domicilios")
 
 		resultados = cursordireccion.fetchall()
-		if len(resultados) != 0: 
-			return resultados[0]
+		if len(resultados) != 0: 			
+			valor = resultados[0]
+			valor_extaido = valor[0]
+			curinsert.close()
+			cursordireccion.close()	
+			return str(valor_extaido)
 		else:
 			return -1 
 
@@ -93,6 +103,15 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 
 		idempresanew = f_dame_id_empresa()
 
+		if len(nombre) > 100:
+			nombre = nombre[:99]
+
+		if len(cif) > 12:
+			cif = cif[:12]
+
+		if not isinstance(fechaconvenio, datetime):
+			fechaconvenio = datetime.now()
+			
 		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
 		curinsert.execute(sql, val)

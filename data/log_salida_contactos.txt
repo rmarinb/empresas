@@ -1,4 +1,1 @@
-00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente21699
-03 - Contactos del cliente: 21699 son13
-04 - No tiene email, damos de alta el contacto
-06 - Vamos a insertar el contacto con los datos:  Ignacio Colmenarejo      
+00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente10257

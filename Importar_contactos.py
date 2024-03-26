@@ -7,7 +7,7 @@ from    sqlalchemy import create_engine
 import 	mysql.connector
 
 # Función que dada una idespecialidad, me retorne su codespecialidad  concatenado con ' FORM' 
-def f_dame_especialidad(conn, idespecial):
+def f_dame_especialidad(fc, conn, idespecial):
 
 	codigo = "FORM" 
 	cursorespecial = conn.cursor()
@@ -15,10 +15,8 @@ def f_dame_especialidad(conn, idespecial):
 	resultados = cursorespecial.fetchall()
 
 	for resultado in resultados:
-		codigo += '/ ' + resultado[0] 	
+		codigo += '/ ' + str(resultado[0]) 	
 
-	print('08 - La especialidad  ES: ', codigo)
-	f.write('08 - La especialidad ES:' + codigo)
 	cursorespecial.close()
 	return codigo		
 
@@ -52,6 +50,8 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 	if telefono2 !=0:
 		telefono += telefono2
 
+	departamento = str(departamento)[:45]
+
 	if departamento !=0:
 		departament = departamento
 	else:
@@ -62,10 +62,16 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 	else:
 		carg = ' ' 
 
+	carg = carg[:99]
+	
+	email = str(email)[:99]
+
 	if nombre !=0:
 		nombr = nombre
 	else:
 		nombr = ' '
+
+	dni = str(dni)[:10]
 
 	if dni !=0:
 		dn = dni
@@ -73,17 +79,19 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 		dn = ' ' 
 
 	if especialidad !=0:
-		especialida = f_dame_especialidad(conn, especialidad)
+		especialida = f_dame_especialidad(fc, conn, especialidad)
 	else:
 		especialida = ' '
-
+		
 	fc.write('06 - Vamos a insertar el contacto con los datos:  ' + nombr + ' ' + dn + ' ' + carg + ' ' + especialida +  '\n')
 	print("06 - Vamos a insertar el contacto con los datos: ", nombr)
 
 	curinsert = conn.cursor()
 	
+	telefono = str(telefono)[:49]
+
 	sql = "INSERT INTO ge_contactos (iddomicilio, dni, nombre, email, telefono, cargo, observaciones, especialidad, departamento) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-	val = (domicilio, dn, nombr, email, telefono, carg, 'De escuela empresa', especialida, departament)
+	val = (str(domicilio), dn, str(nombr), email, str(telefono), str(carg), 'De escuela empresa', str(especialida), str(departament))
 	
 	curinsert.execute(sql, val)
 	conn.commit()
@@ -144,7 +152,10 @@ def f_contactos(cliente, domicilio):
 				print("05a - No existe el email, lo damos de alta" )		
 				f_alta_contacto(conn, fc, domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] , df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'], email)
 			else:
-				f_update_contacto(fc, conn, resultados[0], resultados[1])
+				for fila in resultados:
+					print(fila[0])
+					print(fila[1])
+					f_update_contacto(fc, conn, fila[0], fila[1])
 
 		# 06 - El email no está informado. Metemos el contacto si o si
 		else:
