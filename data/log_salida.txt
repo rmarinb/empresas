@@ -1,6 +1,130 @@
 ****** EMPEZAMOS CON LAS EMPRESAS 
-03 - ************************************************* DATOS DE LA EMPRESA ********  Automation24 GmbH - 0
+03 - ************************************************* DATOS DE LA EMPRESA ********  Automation24 GmbH
 03 -  No tiene CIF, vamos a trabajar con su nombre:  Automation24 GmbH
-03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 397003 - ************************************************* DATOS DE LA EMPRESA ******** 2NET-WORKS - J99058315
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3970
+03 - ************************************************* DATOS DE LA EMPRESA ******** 2NET-WORKS
 04 - ********************** CIF:J99058315
 05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 3
+03 - ************************************************* DATOS DE LA EMPRESA ******** 3T CONTROL PRECISI�N Y SYSTEMS
+04 - ********************** CIF:B97839211
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 4
+03 - ************************************************* DATOS DE LA EMPRESA ******** A T INGENIERIA DE TELECOMUNICACI�N SLP
+04 - ********************** CIF:B99029985
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 5
+03 - ************************************************* DATOS DE LA EMPRESA ******** A TODO TRAPO (INSERCI�N)
+03 -  No tiene CIF, vamos a trabajar con su nombre: A TODO TRAPO (INSERCI�N)
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1095
+03 - ************************************************* DATOS DE LA EMPRESA ******** A.B.C. FLOPPY S.L.
+04 - ********************** CIF:B50624766
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 6
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1042
+03 - ************************************************* DATOS DE LA EMPRESA ******** A.D.JUDO CLUB ZARAGOZA
+04 - ********************** CIF:G50789643
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1096
+03 - ************************************************* DATOS DE LA EMPRESA ******** A3 TELEVISI�N
+03 -  No tiene CIF, vamos a trabajar con su nombre: A3 TELEVISI�N
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1097
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABARCO RECLAMOS PUBLICITARIOS, S.L.
+04 - ********************** CIF:B50746650
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1098
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABB
+03 -  No tiene CIF, vamos a trabajar con su nombre: ABB
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3004
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1056
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABC
+03 -  No tiene CIF, vamos a trabajar con su nombre: ABC
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3005
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1042
+03 - ************************************************* DATOS DE LA EMPRESA ******** Abdias Joel Encinas G�mez 
+03 -  No tiene CIF, vamos a trabajar con su nombre: Abdias Joel Encinas G�mez 
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1099
+03 - ************************************************* DATOS DE LA EMPRESA ******** Abel Gimeno artal
+03 -  No tiene CIF, vamos a trabajar con su nombre: Abel Gimeno artal
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1100
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABELL� LINDE, S.A. - LINDE GAS ESPA�A, S.A.U.
+04 - ********************** CIF:A08007262
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1101
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABM COMPANY DISE�O GR�FICO
+04 - ********************** CIF:27461370Z
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1102
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABM REXEL
+04 - ********************** CIF:B28262822
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1103
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABOGADO - JUAN ANTONIO TORCAL
+03 -  No tiene CIF, vamos a trabajar con su nombre: ABOGADO - JUAN ANTONIO TORCAL
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1104
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABRASIVOS JADECA, S.L.
+03 -  No tiene CIF, vamos a trabajar con su nombre: ABRASIVOS JADECA, S.L.
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1105
+03 - ************************************************* DATOS DE LA EMPRESA ******** ABT ELECTRONICA, S.L.
+04 - ********************** CIF:B50597715
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1106
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACADEMIA DE LOG�STICA DEL EJERCITO DE TIERRA
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACADEMIA DE LOG�STICA DEL EJERCITO DE TIERRA
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1107
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACADEMIA GENERAL MILITAR
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACADEMIA GENERAL MILITAR
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3008
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACADEMIA MARCO
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACADEMIA MARCO
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3009
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACCEM
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACCEM
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1108
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACCIONA FACILITY SERVICES
+04 - ********************** CIF:A08175994
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 8
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACCIONA SERVICE
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACCIONA SERVICE
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1109
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACENTO GR�FICO PUBLICIDAD, S.L.
+04 - ********************** CIF:B50649979
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1110
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACERALIA PERFILES ZARAGOZA, S.A.
+04 - ********************** CIF:A50004126
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 60
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACEROS HISPANIA
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACEROS HISPANIA
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3010
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACEROS IMS, S.A.
+04 - ********************** CIF:A-08426470
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1111
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACHA OSCA-MONPERZASA / UNION DE EMPRESAS RUBIO, S.L.
+04 - ********************** CIF:B99301301
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1112
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACOFAL, S.L.U.
+04 - ********************** CIF:B50183060
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 11
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACQUA RADIOTEL SL
+04 - ********************** CIF:B50876283
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 12
+03 - ************************************************* DATOS DE LA EMPRESA ******** ACTUASOLUTIONS -ACTUA GESTION DEL CONOCIMIENTO, S.L.
+03 -  No tiene CIF, vamos a trabajar con su nombre: ACTUASOLUTIONS -ACTUA GESTION DEL CONOCIMIENTO, S.L.
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1113
+03 - ************************************************* DATOS DE LA EMPRESA ******** AD CONSULTING, S.L.
+03 -  No tiene CIF, vamos a trabajar con su nombre: AD CONSULTING, S.L.
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3012
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADA COMPUTER, S.A.
+04 - ********************** CIF:A50093897
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 3013
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADANET SISTEMAS Y APLICACIONES, S.L.
+04 - ********************** CIF:B99238800
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 13
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADDI TELECOM
+04 - ********************** CIF:B-50566439
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1114
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADDLINK, Software Cient�fico
+04 - ********************** CIF:B 59852053
+05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** 1115
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADEA
+03 -  No tiene CIF, vamos a trabajar con su nombre: ADEA
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 3770
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADECCO ARAG�N
+03 -  No tiene CIF, vamos a trabajar con su nombre: ADECCO ARAG�N
+03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** 1116
+03 - ************************************************* DATOS DE LA EMPRESA ******** ADECOBEL - Asoc. para el Desarrollo Rural Integral de la Comarca Campo de Belchite
+03 -  No tiene CIF, vamos a trabajar con su nombre: ADECOBEL - Asoc. para el Desarrollo Rural Integral de la Comarca Campo de Belchite
+06 - Vamos a insertar la empresa:  0
+06 - Vamos a insertar la empresa con nombre:  ADECOBEL - Asoc. para el Desarrollo Rural Integral de la Comarca Campo de Belchite 0
+07 - El nuevo  IDEMPRESA retornado ES:111706 - El registro ha sido insertado correctamente ADECOBEL - Asoc. para el Desarrollo Rural Integral de la Comarca Campo de Belchite 0************ 
+09 - La especialidad ES:FORM

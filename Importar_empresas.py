@@ -6,18 +6,16 @@ import  MySQLdb
 from    sqlalchemy import create_engine
 from 	datetime import datetime
 import 	mysql.connector
-import 	Importar_contactos
-
-# Función que da de alta los contactos de una empresa
-# def f_alta_contactos(idempresa):
-
+import 	Importar_contactos as contact
 
 # Función que dada una idespecialidad, me retorne su codespecialidad  concatenado con ' FORM' 
 def f_dame_especialidad(idespecial):
+
 	codigo = "FORM" 
 	cursorespecial = conn.cursor()
-	cursorespecial.execute("SELECT codespecialidad FROM especialidad WHERE idespecialidad = %s", idespecial)
+	cursorespecial.execute("SELECT codespecialidad FROM especialidad WHERE idespecialidad = %s", (idespecial, ))
 	resultados = cursorespecial.fetchall()
+
 	for resultado in resultados:
 		codigo += '/ ' + resultado[0] 	
 
@@ -31,7 +29,7 @@ def f_dame_especialidad(idespecial):
 def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad):
 	# 08 - Miramos si existe o no en la bbdd por email
 	cursordireccion = conn.cursor()
-	cursordireccion.execute("SELECT CAST(iddomicilio as char) FROM ge_domicilios WHERE email like %s", ("%" + email+ "%",))
+	cursordireccion.execute("SELECT CAST(iddomicilio as char) FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 
 	resultados = cursordireccion.fetchall()
 	for resultado in resultados:
@@ -48,14 +46,14 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 		conn.commit()
 
 		print("08 - Registro insertado con la dirección: " , email)
-		f.write('08 - El registro ha sido insertado correctamente para la dirección '+ domicilio + ' de la empresa ' + idempresa +'  \n')		
+		f.write('08 - El registro ha sido insertado correctamente para la dirección '+ str(domicilio) + ' de la empresa ' + str(idempresa) +'  \n')		
 		
 		# Buscamos el código del a dirección que se acaba de insertar
-		cursordireccion.execute("SELECT max(iddomicilio as char) FROM ge_domicilios")
+		cursordireccion.execute("SELECT max(iddomicilio) FROM ge_domicilios")
 
 		resultados = cursordireccion.fetchall()
 		if len(resultados) != 0: 
-			return resultado[0]
+			return resultados[0]
 		else:
 			return -1 
 
@@ -65,12 +63,12 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 # Función que devuelve el siguiente IDEMPRESA menor que 3000 (los mayores que 3000 son PDB)
 def f_dame_id_empresa():
 	cursoridempresa = conn.cursor()
-	cursoridempresa.execute("SELECT max(idempresa) FROM ge_empresas WHERE idempresa < 3000")
+	cursoridempresa.execute("SELECT max(idempresa) + 1 FROM ge_empresas WHERE idempresa < 3000")
 	resultados = cursoridempresa.fetchall()
 	for resultado in resultados:
 		newidempresa = resultado[0]
 		print('07 - El nuevo IDEMPRESA retornado ES: ', newidempresa)
-		f.write('07 - El nuevo  IDEMPRESA retornado ES:' + newidempresa)
+		f.write('07 - El nuevo  IDEMPRESA retornado ES:' + str(newidempresa))
 
 	cursoridempresa.close()
 	return newidempresa		
@@ -108,15 +106,15 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 		return idempresanew
 
 # 00 - Generamos el archivo de salida para llevar registro del LOG: archivo-salida.py
-f = open ('data/log_salida.txt','w')
+f = open ('data/log_salida.txt','w', encoding='utf-8')
 f.write('****** EMPEZAMOS CON LAS EMPRESAS '+ '\n')
 
-fi = open ('data/insertados.txt','w')
-fe = open ('data/encontrados.txt','w')
+fi = open ('data/log_insertados.txt','w', encoding='utf-8')
+fe = open ('data/log_encontrados.txt','w', encoding='utf-8')
 
 # 01 - Cogemos los datos de las empresas y los pasamos a un excel 
 df_empresa = pd.DataFrame()
-df_empresa = pd.read_csv('data/empresas.csv', sep=';')
+df_empresa = pd.read_csv('data/empresas.csv', sep=';', encoding='utf-8')
 
 df_empresa = df_empresa.fillna(0)
 df_empresa.to_excel('data/excel_empresas.xlsx')
@@ -136,8 +134,8 @@ for i in range(len(df_empresa)):
 	cifempresa 		= df_empresa.iloc[i]['cif']  
 	nombreempresa 	= df_empresa.iloc[i]['nombre'] 
 	  
-	print("03 - ************************************************* DATOS DE LA EMPRESA ******** " ,  nombreempresa ,  cifempresa )
-	f.write("03 - ************************************************* DATOS DE LA EMPRESA ******** " +  nombreempresa + " - " + str(cifempresa) + "\n" )
+	print("03 - ************************************************* DATOS DE LA EMPRESA ******** " ,  nombreempresa  )
+	f.write("03 - ************************************************* DATOS DE LA EMPRESA ******** " +  nombreempresa  + "\n" )
 
 	if cifempresa is None or  cifempresa == 0:
 		print("03 - No tiene CIF, vamos a trabajar con su nombre" , nombreempresa)		
@@ -149,7 +147,7 @@ for i in range(len(df_empresa)):
 		resultados = cursor.fetchall()
 		for resultado in resultados:
 			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', resultado[0])
-			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + resultado[0])
+			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + resultado[0] + "\n")
 			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + resultado[0] + '\n')
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
@@ -161,12 +159,12 @@ for i in range(len(df_empresa)):
 				nombrecompleto = nombreempresa
 
 			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
-				nombrecompleto += ' ' + df_empresa.iloc[i]['razonsocial'] 
+				nombrecompleto += ' ' + str(df_empresa.iloc[i]['razonsocial'])
 			
 			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
-			f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
 	else:
 		
 		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
@@ -178,7 +176,7 @@ for i in range(len(df_empresa)):
 		resultados = cursor.fetchall()
 		for resultado in resultados:			
 			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', resultado[0])
-			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + resultado[0])
+			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + resultado[0]+ "\n")
 			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + resultado[0] + '\n')
 
 		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 
@@ -189,12 +187,12 @@ for i in range(len(df_empresa)):
 				nombrecompleto = nombreempresa
 
 			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
-				nombrecompleto += ' ' + df_empresa.iloc[i]['razonsocial'] 
+				nombrecompleto += ' ' + str(df_empresa.iloc[i]['razonsocial']) 
 
-			idempresanew = f_alta_empresa(df_empresa.iloc['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
+			idempresanew = f_alta_empresa(df_empresa.iloc[i]['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
-			f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
 
 # 99 - Cerramos todo lo que quede abierto 			
 cursor.close()
