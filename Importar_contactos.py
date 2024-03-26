@@ -5,7 +5,7 @@ import 	pandas as pd
 import  MySQLdb
 from    sqlalchemy import create_engine
 import 	mysql.connector
-import	02_importar_empresas 
+import	Importar_empresas 
 
 def f_update_contacto(fc, conn, contacto, especialidad):
 	

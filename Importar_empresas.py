@@ -6,7 +6,7 @@ import  MySQLdb
 from    sqlalchemy import create_engine
 from 	datetime import datetime
 import 	mysql.connector
-import	02_importar_contactos 
+import 	Importar_contactos
 
 # Función que da de alta los contactos de una empresa
 # def f_alta_contactos(idempresa):
