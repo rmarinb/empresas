@@ -53,17 +53,20 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 		print("06 - El id de domicilio no está informado, no podemos insertar. ")
 		return -1 
 	
+	if email == 0:
+		email =''
+
 	if telefono1 !=0:
 		telefono = telefono1
 	else:
 		telefono = ' ' 
 
 	if telefono2 !=0:
-		telefono += telefono2
+		telefono = telefono + ' ' + telefono2
 
 	departamento = str(departamento)[:45]
 
-	if departamento != 0:
+	if departamento != '0':
 		departament = departamento
 	else:
 		departament = ' '
@@ -89,10 +92,10 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 	else:
 		dn = ' ' 
 
-	if especialidad !=0:
-		especialida = f_dame_especialidad(fc, conn, especialidad)
+	if str(especialidad) != '0':
+		especialida = f_dame_especialidad(fc, conn, especialidad) + ' / FORM'
 	else:
-		especialida = ' '
+		especialida = 'FORM'
 		
 	curinsert = conn.cursor()
 	
@@ -141,7 +144,7 @@ def f_contactos(cliente, domicilio):
 	if df_filtered.count().sum()==0:
 		return
 	
-	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son ' + str(df_filtered.count().sum()) + "\n")
+	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son ' + str(df_filtered.count()) + "\n")
 	print("03 - ****** Número contactos del cliente  ", df_filtered.count().sum())
 
 	# 04 - Recorremos el listado de contactos filtrado 

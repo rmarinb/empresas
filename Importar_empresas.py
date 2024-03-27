@@ -21,6 +21,46 @@ def f_dame_especialidad(idespecial):
 	cursorespecial.close()
 	return codigo		
 
+# Función que dada una empresa, actualiza los datos propios de empresa
+def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
+	print('10 - Vamos a actualizar la empresa: ', empresa)
+	f.write('09 - Vamos a actualizar la empresa: ' + empresa + '\n' )		
+
+	curupdate = conn.cursor()
+	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s WHERE idempresa = %s"
+	val = (interesado, pdb, cliente, proveedor, empresa)
+	curupdate.execute(sql, val)
+	conn.commit()
+
+	print("10 - Registro actualizado de la empresa: " , str(empresa))
+	f.write('10 - Registro actualizado de la empresa '+ str(empresa) + '************ \n')
+
+	curupdate.close()
+
+
+# Función que dado un domicilio, actualiza su especialidad añadiendo FORM
+def f_update_domicilio(domicilio):
+	print('09 - Vamos a actualizar el domicilio: ', domicilio)
+	f.write('09 - Vamos a actualizar el domicilio: ' + domicilio + '\n' )		
+
+	cursor.execute("SELECT especialidad  FROM ge_domicilios WHERE iddomicilio =  %s", domicilio)
+	
+	resultados = cursor.fetchall()
+		
+	if len(resultados) > 0:
+		for fila in resultados:
+			especialidad = fila[0] + ' \ FORM'
+			curupdate = conn.cursor()
+			sql = "UPDATE ge_domicilios SET especialidad = %s WHERE iddomicilio = %s"
+			val = (especialidad, domicilio)
+			curupdate.execute(sql, val)
+			conn.commit()
+
+			print("09 - Registro actualizado del domicilio: " , str(domicilio))
+			f.write('09 - Registro actualizado del domicilio '+ str(domicilio) + '************ \n')
+
+			curupdate.close()
+
 # Función que da de alta la dirección de la empresa pasada por parámetro
 # Tener en cuenta los domicilios que ya existen, se puede comprobar por email
 def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad):
@@ -41,9 +81,12 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	cursordireccion = conn.cursor()
 	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 	resultados = cursordireccion.fetchall()
+
 	for resultado in resultados:
-		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', str(resultado[0]))
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]) + ' ' + str(email))		
+		domicilio = resultado[0]
+		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', domicilio)
+		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(domicilio) + ' ' + str(email)+ '\n')		
+		f_update_domicilio(domicilio)
 		cursordireccion.close()	
 		return str(resultado[0])
 
@@ -102,11 +145,14 @@ def f_dame_id_empresa():
 # Funcion que da de alta la empresa que recibe por parámetro
 def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, interesados, pdb, cliente, proveedor):
 		
-		f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n')
+		f.write('06 - Vamos a insertar la empresa:  ' + cif + '\n') # si el cif es 0 el comentario no tiene mucho sentido
 		f.write('06 - Vamos a insertar la empresa con nombre:  ' + nombre + '\n')
 		print("06 - Vamos a insertar los datos de la empresa: ", nombre)
 		
 		curinsert = conn.cursor()
+
+		if str(cif) == '0':
+			cif = ''
 
 		if (fechaconvenio==0):
 			fechaconvenio= datetime.now()
@@ -158,27 +204,10 @@ fe = open ('data/log_empresas_encontrados.txt','w', encoding='utf-8')
 # 01 - Cogemos los datos de las empresas y los pasamos a un excel 
 df_empresa = pd.DataFrame()
 
-"""
-# Esta es la forma de Alvaro y se lee mal 
-fichero = open('data/clientes.csv', 'r')
-for line in fichero:
-	print(line.encode())
-
-
-# Esta es la forma de Larisa y se lee bien 
-import csv
-with open('data/clientes.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
-    for row in spamreader:
-        print(', '.join(row))
-
-		"""
-
 # Esta es mi forma y se lee mal 
 df_empresa = pd.read_csv('data/empresas.csv', sep=';', encoding='latin-1')
 df_empresa = df_empresa.fillna(0)
 df_empresa.to_excel('data/excel_empresas.xlsx')
-
 
 # 02 - Conectamos a la BBDD 
 conn = mysql.connector.connect(
@@ -207,9 +236,11 @@ for i in range(len(df_empresa)):
 
 		resultados = cursor.fetchall()
 		for resultado in resultados:
-			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', resultado[0])
-			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + resultado[0] + "\n")
-			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + resultado[0] + '\n')
+			idempresa = resultado[0]
+			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', idempresa)
+			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + idempresa + "\n")
+			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + idempresa + '\n')		
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadobolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:
@@ -241,10 +272,13 @@ for i in range(len(df_empresa)):
 				
 		# 05 - Obtener los datos de la empresa existente o no en la tabla
 		resultados = cursor.fetchall()
-		for resultado in resultados:			
-			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', resultado[0])
-			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + resultado[0]+ "\n")
-			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + resultado[0] + '\n')
+		for resultado in resultados:	
+			idempresa =	resultado[0]
+			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', idempresa)
+			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + str(idempresa) + "\n")
+			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + str(idempresa) + '\n')
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadobolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
+
 
 		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:			
@@ -253,7 +287,7 @@ for i in range(len(df_empresa)):
 			else:
 				nombrecompleto = nombreempresa
 
-			if nombreempresa != df_empresa.iloc[i]['razonsocial'] and str(df_empresa.iloc[i]['razonsocial']) != 0:
+			if nombreempresa != df_empresa.iloc[i]['razonsocial'] and df_empresa.iloc[i]['razonsocial'] != 0:
 				nombrecompleto += ' ' + str(df_empresa.iloc[i]['razonsocial']) 
 
 			idempresanew = f_alta_empresa(df_empresa.iloc[i]['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
