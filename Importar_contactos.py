@@ -15,7 +15,7 @@ def f_dame_especialidad(fc, conn, idespecial):
 	resultados = cursorespecial.fetchall()
 
 	for resultado in resultados:
-		codigo += '/ ' + str(resultado[0]) 	
+		codigo = codigo +  ' / ' + str(resultado[0]) 	
 
 	cursorespecial.close()
 	return codigo		
@@ -104,8 +104,8 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 def f_contactos(cliente, domicilio):
 
 	# 00 - Generamos el archivo de salida para llevar registro del LOG: archivo-salida.py
-	fc = open ('data/log_salida_contactos.txt','w', encoding='utf-8')
-	fc.write('00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente' + str(cliente) +  '\n')
+	fc = open ('data/log_salida_contactos.txt','a', encoding='utf-8')
+	fc.write('00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente ' + str(cliente) +  '\n')
 	print("00 - ****** EMPEZAMOS CON LOS CONTACTOS del cliente ", str(cliente))
 
 	# 01 - Cogemos los datos de los contactos y los pasamos a un excel 
@@ -131,7 +131,7 @@ def f_contactos(cliente, domicilio):
 	if df_filtered.count().sum()==0:
 		return
 	
-	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son' + str(df_filtered.count().sum()) + "\n")
+	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son ' + str(df_filtered.count().sum()) + "\n")
 	print("03 - ****** Número contactos del cliente  ", df_filtered.count().sum())
 
 	# 04 - Recorremos el listado de contactos filtrado 
@@ -148,13 +148,13 @@ def f_contactos(cliente, domicilio):
 		
 			# 05a - No existe el registro en la BBDD, lo tenemos que dar de alta 
 			if len(resultados) == 0:
-				fc.write('05a - No existe el email, lo damos de alta' )
+				fc.write('05a - No existe el email, lo damos de alta'  + "\n")
 				print("05a - No existe el email, lo damos de alta" )		
 				f_alta_contacto(conn, fc, domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] , df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'], email)
 			else:
-				for fila in resultados:
-					print(fila[0])
-					print(fila[1])
+				fc.write('05b - Existe el email, lo vamos a actualizar' + "\n" )
+				print("05b - Existe el email, lo vamos a actualizar" )	
+				for fila in resultados:				
 					f_update_contacto(fc, conn, fila[0], fila[1])
 
 		# 06 - El email no está informado. Metemos el contacto si o si

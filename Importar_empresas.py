@@ -3,7 +3,6 @@
 
 import 	pandas as pd
 import  MySQLdb
-from    sqlalchemy import create_engine
 from 	datetime import datetime
 import 	mysql.connector
 import 	Importar_contactos as contact
@@ -26,6 +25,13 @@ def f_dame_especialidad(idespecial):
 # Tener en cuenta los domicilios que ya existen, se puede comprobar por email
 def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad):
 	# 08 - Miramos si existe o no en la bbdd por email
+
+	if cp == 0:
+		cp = ' '
+
+	if localidad == 0:
+		localidad = ' '
+
 	cursordireccion = conn.cursor()
 	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 	resultados = cursordireccion.fetchall()
@@ -111,6 +117,8 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 
 		if not isinstance(fechaconvenio, datetime):
 			fechaconvenio = datetime.now()
+
+		proveedor = str(proveedor)
 			
 		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
@@ -128,15 +136,32 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 f = open ('data/log_salida.txt','w', encoding='utf-8')
 f.write('****** EMPEZAMOS CON LAS EMPRESAS '+ '\n')
 
-fi = open ('data/log_insertados.txt','w', encoding='utf-8')
-fe = open ('data/log_encontrados.txt','w', encoding='utf-8')
+fi = open ('data/log_empresas_insertados.txt','w', encoding='utf-8')
+fe = open ('data/log_empresas_encontrados.txt','w', encoding='utf-8')
 
 # 01 - Cogemos los datos de las empresas y los pasamos a un excel 
 df_empresa = pd.DataFrame()
-df_empresa = pd.read_csv('data/empresas.csv', sep=';', encoding='utf-8')
+"""
+# Esta es la forma de Alvaro y se lee mal 
+fichero = open('data/clientes.csv', 'r')
+for line in fichero:
+	print(line.encode())
 
+
+# Esta es la forma de Larisa y se lee bien 
+import csv
+with open('data/clientes.csv', newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
+    for row in spamreader:
+        print(', '.join(row))
+
+		"""
+
+# Esta es mi forma y se lee mal 
+df_empresa = pd.read_csv('data/empresas.csv', sep=';', encoding='latin-1')
 df_empresa = df_empresa.fillna(0)
 df_empresa.to_excel('data/excel_empresas.xlsx')
+
 
 # 02 - Conectamos a la BBDD 
 conn = mysql.connector.connect(
@@ -177,7 +202,7 @@ for i in range(len(df_empresa)):
 			else:
 				nombrecompleto = nombreempresa
 
-			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
+			if nombreempresa != df_empresa.iloc[i]['razonsocial'] and df_empresa.iloc[i]['razonsocial'] != 0:
 				nombrecompleto += ' ' + str(df_empresa.iloc[i]['razonsocial'])
 			
 			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
