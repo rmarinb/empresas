@@ -179,7 +179,7 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 		if observaciones == 0:
 			observaciones = '(De empresa escuela)'
 		else:
-			observaciones = observaciones + ' /n (De empresa escuela)'
+			observaciones = observaciones + ' (De empresa escuela)'
 		
 			
 		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"

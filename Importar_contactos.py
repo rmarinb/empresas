@@ -144,8 +144,8 @@ def f_contactos(cliente, domicilio):
 	if df_filtered.count().sum()==0:
 		return
 	
-	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son ' + str(df_filtered.count()) + "\n")
-	print("03 - ****** Número contactos del cliente  ", df_filtered.count().sum())
+	fc.write('03 - Contactos del cliente: '+ str(cliente) + ' son ' + str(df_filtered.shape[0]) + "\n")
+	print("03 - ****** Número contactos del cliente  ", df_filtered.shape[0])
 
 	# 04 - Recorremos el listado de contactos filtrado 
 	for i in range(len(df_filtered)):
