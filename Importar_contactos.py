@@ -22,8 +22,8 @@ def f_dame_especialidad(fc, conn, idespecial):
 
 def f_update_contacto(fc, conn, contacto, especialidad):
 	
-	fc.write('07 - Vamos a actualizar el contacto:  ' + contacto +  '\n')
-	print("07 - Vamos a actualizar el contacto: ", contacto)
+	fc.write('07 - Vamos a actualizar el contacto:  ' + str(contacto) +  '\n')
+	print("07 - Vamos a actualizar el contacto: ", str(contacto))
 
 	curupdate = conn.cursor()
 	
@@ -38,13 +38,21 @@ def f_update_contacto(fc, conn, contacto, especialidad):
 	curupdate.execute(sql, val)
 	conn.commit()
 
-	print("07 - Registro actualizado del contacto: " , contacto)
-	fc.write('06 - Registro actualizado del contacto '+ contacto + '************ \n')
+	print("07 - Registro actualizado del contacto: " , str(contacto))
+	fc.write('07 - Registro actualizado del contacto '+ str(contacto) + '************ \n')
 
 	curupdate.close()
 
 def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, cargo, nombre, dni, especialidad, email):
-											
+
+	fc.write('06 - Vamos a insertar el contacto con los datos:  ' + str(nombre) + ' ' + str(dni) + ' ' + str(cargo) + ' ' + str(especialidad) +  '\n')
+	print("06 - Vamos a insertar el contacto con los datos: ", nombre)
+
+	if domicilio == 0 or domicilio == None:
+		fc.write('06 - El id de domicilio no está informado, no podemos insertar \n')
+		print("06 - El id de domicilio no está informado, no podemos insertar. ")
+		return -1 
+	
 	if telefono1 !=0:
 		telefono = telefono1
 	else:
@@ -86,15 +94,12 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 	else:
 		especialida = ' '
 		
-	fc.write('06 - Vamos a insertar el contacto con los datos:  ' + nombr + ' ' + dn + ' ' + carg + ' ' + especialida +  '\n')
-	print("06 - Vamos a insertar el contacto con los datos: ", nombr)
-
 	curinsert = conn.cursor()
 	
 	telefono = str(telefono)[:49]
 
 	sql = "INSERT INTO ge_contactos (iddomicilio, dni, nombre, email, telefono, cargo, observaciones, especialidad, departamento) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-	val = (str(domicilio), dn, str(nombr), email, str(telefono), str(carg), 'De escuela empresa', str(especialida), str(departament))
+	val = (domicilio, dn, str(nombr), email, str(telefono), str(carg), 'De escuela empresa', str(especialida), str(departament))
 	
 	curinsert.execute(sql, val)
 	conn.commit()
@@ -103,6 +108,8 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 	fc.write('06 - Registro insertaco con el contacto '+ nombr + '************ \n')
 
 	curinsert.close()
+
+	return 1
 
 def f_contactos(cliente, domicilio):
 
@@ -158,9 +165,17 @@ def f_contactos(cliente, domicilio):
 				fc.write('05b - Existe el email, lo vamos a actualizar ' + email + "\n" )
 				print("05b - Existe el email, lo vamos a actualizar ", email )	
 
-				for fila in resultados:				
-					contacto, especialidad = fila[i]
-					f_update_contacto(fc, conn, contacto, especialidad)
+				for fila in resultados:
+					print("Valor del campo 1:", fila[0])
+					print("Valor del campo 2:", fila[1])
+					
+					if len(fila[0]) > 0:
+						contacto = fila[0]
+						if len(fila[1]) > 0:
+							especialidad = fila[1]
+						else:	
+							especialidad = '' 
+						f_update_contacto(fc, conn, contacto, especialidad)
 
 		# 06 - El email no está informado. Metemos el contacto si o si
 		else:

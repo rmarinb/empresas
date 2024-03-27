@@ -43,7 +43,7 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	resultados = cursordireccion.fetchall()
 	for resultado in resultados:
 		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', str(resultado[0]))
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]) + ' ' + email)		
+		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]) + ' ' + str(email))		
 		cursordireccion.close()	
 		return str(resultado[0])
 
@@ -74,15 +74,16 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 			cursordireccion.execute("SELECT max(iddomicilio) FROM ge_domicilios")
 			resultados = cursordireccion.fetchall()
 
+			curinsert.close()
+
 			if len(resultados) != 0: 			
 				valor = resultados[0]
-				curinsert.close()
+				valortem = valor[0]
 				cursordireccion.close()	
-				return str(valor)
+				return str(valortem)
 			else:
 				return -1 
-
-	curinsert.close()
+			
 	cursordireccion.close()	
 
 # Función que devuelve el siguiente IDEMPRESA menor que 3000 (los mayores que 3000 son PDB)
@@ -129,10 +130,11 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 
 		proveedor = str(proveedor)[:1]
 
-		if len(observaciones) > 0:
-			observaciones = observaciones + ' De empresa escuela'
+		if observaciones == 0:
+			observaciones = '(De empresa escuela)'
 		else:
-			observaciones = 'De empresa escuela'
+			observaciones = observaciones + ' /n (De empresa escuela)'
+		
 			
 		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
