@@ -41,15 +41,15 @@ def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
 # Función que dado un domicilio, actualiza su especialidad añadiendo FORM
 def f_update_domicilio(domicilio):
 	print('09 - Vamos a actualizar el domicilio: ', domicilio)
-	f.write('09 - Vamos a actualizar el domicilio: ' + domicilio + '\n' )		
+	f.write('09 - Vamos a actualizar el domicilio: ' + str(domicilio) + '\n' )		
 
-	cursor.execute("SELECT especialidad  FROM ge_domicilios WHERE iddomicilio =  %s", domicilio)
+	cursor.execute("SELECT especialidad  FROM ge_domicilios WHERE iddomicilio = %s", ("" + str(domicilio) + "",))
 	
 	resultados = cursor.fetchall()
 		
 	if len(resultados) > 0:
 		for fila in resultados:
-			especialidad = fila[0] + ' \ FORM'
+			especialidad = str(fila[0]) + "\FORM"
 			curupdate = conn.cursor()
 			sql = "UPDATE ge_domicilios SET especialidad = %s WHERE iddomicilio = %s"
 			val = (especialidad, domicilio)
@@ -85,7 +85,7 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	for resultado in resultados:
 		domicilio = resultado[0]
 		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', domicilio)
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(domicilio) + ' ' + str(email)+ '\n')		
+		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(domicilio) + '\n')		
 		f_update_domicilio(domicilio)
 		cursordireccion.close()	
 		return str(resultado[0])
@@ -240,7 +240,7 @@ for i in range(len(df_empresa)):
 			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', idempresa)
 			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + idempresa + "\n")
 			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + idempresa + '\n')		
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadobolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:
@@ -277,7 +277,7 @@ for i in range(len(df_empresa)):
 			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', idempresa)
 			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + str(idempresa) + "\n")
 			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + str(idempresa) + '\n')
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadobolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
 
 
 		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 

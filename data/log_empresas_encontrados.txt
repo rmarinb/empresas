@@ -1,17 +1,32 @@
+Entrontrado:   Automation24 GmbH, con el ID_EMPRESA 1095
 Entrontrado:  J99058315 2NET-WORKS 3
 Entrontrado:  B97839211 3T CONTROL PRECISIÓN Y SYSTEMS 4
 Entrontrado:  B99029985 A T INGENIERIA DE TELECOMUNICACIÓN SLP 5
+Entrontrado:  A TODO TRAPO (INSERCIÓN), con el ID_EMPRESA 1096
 Entrontrado:  B50624766 A.B.C. FLOPPY S.L. 6
 Entrontrado:  B50624766 A.B.C. FLOPPY S.L. 1042
+Entrontrado:  G50789643 A.D.JUDO CLUB ZARAGOZA 1097
 Entrontrado:  A3 TELEVISIÓN, con el ID_EMPRESA 3002
+Entrontrado:  B50746650 ABARCO RECLAMOS PUBLICITARIOS, S.L. 1098
 Entrontrado:  ABB, con el ID_EMPRESA 3004
 Entrontrado:  ABB, con el ID_EMPRESA 1056
 Entrontrado:  ABC, con el ID_EMPRESA 3005
 Entrontrado:  ABC, con el ID_EMPRESA 1042
+Entrontrado:  Abdias Joel Encinas Gómez , con el ID_EMPRESA 1099
+Entrontrado:  Abel Gimeno artal, con el ID_EMPRESA 1100
+Entrontrado:  A08007262 ABELLÓ LINDE, S.A. - LINDE GAS ESPAÑA, S.A.U. 1101
+Entrontrado:  27461370Z ABM COMPANY DISEÑO GRÁFICO 1102
+Entrontrado:  B28262822 ABM REXEL 1103
+Entrontrado:  ABOGADO - JUAN ANTONIO TORCAL, con el ID_EMPRESA 1104
+Entrontrado:  ABRASIVOS JADECA, S.L., con el ID_EMPRESA 1105
+Entrontrado:  B50597715 ABT ELECTRONICA, S.L. 1106
 Entrontrado:  ACADEMIA DE LOGÍSTICA DEL EJERCITO DE TIERRA, con el ID_EMPRESA 3007
 Entrontrado:  ACADEMIA GENERAL MILITAR, con el ID_EMPRESA 3008
 Entrontrado:  ACADEMIA MARCO, con el ID_EMPRESA 3009
+Entrontrado:  ACCEM, con el ID_EMPRESA 1107
 Entrontrado:  A08175994 ACCIONA FACILITY SERVICES 8
+Entrontrado:  ACCIONA SERVICE, con el ID_EMPRESA 1108
+Entrontrado:  B50649979 ACENTO GRÁFICO PUBLICIDAD, S.L. 1109
 Entrontrado:  A50004126 ACERALIA PERFILES ZARAGOZA, S.A. 60
 Entrontrado:  ACEROS HISPANIA, con el ID_EMPRESA 3010
 Entrontrado:  B50183060 ACOFAL, S.L.U. 11
@@ -563,8 +578,8 @@ Entrontrado:  ITA, con el ID_EMPRESA 3576
 Entrontrado:  ITA, con el ID_EMPRESA 1659
 Entrontrado:  ITA, con el ID_EMPRESA 1660
 Entrontrado:  ITA, con el ID_EMPRESA 3402
-Entrontrado:  ITA, con el ID_EMPRESA 3403
 Entrontrado:  ITA, con el ID_EMPRESA 1661
+Entrontrado:  ITA, con el ID_EMPRESA 3403
 Entrontrado:  ITA, con el ID_EMPRESA 3895
 Entrontrado:  ITA, con el ID_EMPRESA 3401
 Entrontrado:  ITA, con el ID_EMPRESA 347
