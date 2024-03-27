@@ -49,3 +49,9 @@ ADD COLUMN `proveedor` VARCHAR(45) NULL AFTER `cliente`;
 # En contactos metemos el departamento para poder volcar los datos de escuela-empresa 
 ALTER TABLE `empresas`.`ge_contactos` 
 ADD COLUMN `departamento` VARCHAR(45) NULL AFTER `especialidad`;
+
+# Las empresas mayores de 3000 las marcamos como PDB
+UPDATE GE_EMPRESAS 
+SET PDB=1 
+WHERE IDEMPRESA > 3000
+

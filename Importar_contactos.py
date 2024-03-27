@@ -27,7 +27,10 @@ def f_update_contacto(fc, conn, contacto, especialidad):
 
 	curupdate = conn.cursor()
 	
-	especialidad += ' / FORM'
+	if len(especialidad) == 0:
+		especialidad = 'FORM'
+	else:
+		especialidad += ' / FORM'
 
 	sql = "UPDATE ge_contactos SET especialidad = %s WHERE idcontacto = %s"
 	val = (especialidad, contacto)
@@ -52,7 +55,7 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 
 	departamento = str(departamento)[:45]
 
-	if departamento !=0:
+	if departamento != 0:
 		departament = departamento
 	else:
 		departament = ' '
@@ -73,7 +76,7 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 
 	dni = str(dni)[:10]
 
-	if dni !=0:
+	if dni !='0':
 		dn = dni
 	else:
 		dn = ' ' 
@@ -110,7 +113,7 @@ def f_contactos(cliente, domicilio):
 
 	# 01 - Cogemos los datos de los contactos y los pasamos a un excel 
 	df_contactos = pd.DataFrame()
-	df_contactos = pd.read_csv('data/contactos.csv', sep=';', encoding='utf-8')
+	df_contactos = pd.read_csv('data/contactos.csv', sep=';', encoding='latin-1')
 
 	df_contactos = df_contactos.fillna(0)
 	df_contactos.to_excel('data/excel_contactos.xlsx')
@@ -152,10 +155,12 @@ def f_contactos(cliente, domicilio):
 				print("05a - No existe el email, lo damos de alta" )		
 				f_alta_contacto(conn, fc, domicilio, df_filtered.iloc[i]['telefono1'], df_filtered.iloc[i]['telefono2'], df_filtered.iloc[i]['departamento'], df_filtered.iloc[i]['cargo'],df_filtered.iloc[i]['nombre'] , df_filtered.iloc[i]['dni'], df_filtered.iloc[i]['idespecialidad'], email)
 			else:
-				fc.write('05b - Existe el email, lo vamos a actualizar' + "\n" )
-				print("05b - Existe el email, lo vamos a actualizar" )	
+				fc.write('05b - Existe el email, lo vamos a actualizar ' + email + "\n" )
+				print("05b - Existe el email, lo vamos a actualizar ", email )	
+
 				for fila in resultados:				
-					f_update_contacto(fc, conn, fila[0], fila[1])
+					contacto, especialidad = fila[i]
+					f_update_contacto(fc, conn, contacto, especialidad)
 
 		# 06 - El email no está informado. Metemos el contacto si o si
 		else:

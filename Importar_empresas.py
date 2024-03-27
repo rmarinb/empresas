@@ -32,18 +32,27 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	if localidad == 0:
 		localidad = ' '
 
+	if provincia == 0:
+		provincia = ' '
+
+	if telefono == 0:
+		telefono = ' '		
+
 	cursordireccion = conn.cursor()
 	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 	resultados = cursordireccion.fetchall()
 	for resultado in resultados:
 		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', str(resultado[0]))
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]))		
+		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(resultado[0]) + ' ' + email)		
 		cursordireccion.close()	
 		return str(resultado[0])
 
 	# 08 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 	if len(resultados)==0:
 
+		print('08 - La dirección NO existe en la BBDD.INSERTAMOS. EMAIL: ****************** ', email)
+		f.write('08 - La dirección NO existe en la BBDD.INSERTAMOS. EMAIL:  ****************** ' +  email  + '\n')		
+		
 		# El campo del CP está acortado a 5 
 		if len(str(cp)) > 5:
 			cp = cp[:5]
@@ -51,27 +60,27 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 		email = str(email)[:59]
 		telefono = str(telefono)[:49]
 
-		curinsert = conn.cursor()
-		sql = "INSERT INTO ge_domicilios(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-		val = (idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad)
-		curinsert.execute(sql, val)
-		conn.commit()
+		if len(str(domicilio))> 1:
+			curinsert = conn.cursor()
+			sql = "INSERT INTO ge_domicilios(idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			val = (idempresa, domicilio, cp, provincia, localidad, telefono, email, especialidad)
+			curinsert.execute(sql, val)
+			conn.commit()
 
-		print("08 - Registro insertado con la dirección: " , email)
-		f.write('08 - El registro ha sido insertado correctamente para la dirección '+ str(domicilio) + ' de la empresa ' + str(idempresa) +'  \n')		
-		
-		# Buscamos el código del a dirección que se acaba de insertar
-		cursordireccion.execute("SELECT max(iddomicilio) FROM ge_domicilios")
+			print("08 - Registro insertado con la dirección: " , email)
+			f.write('08 - El registro ha sido insertado correctamente para la dirección '+ str(domicilio) + ' de la empresa ' + str(idempresa) +'  \n')		
+				
+			# Buscamos el código del a dirección que se acaba de insertar
+			cursordireccion.execute("SELECT max(iddomicilio) FROM ge_domicilios")
+			resultados = cursordireccion.fetchall()
 
-		resultados = cursordireccion.fetchall()
-		if len(resultados) != 0: 			
-			valor = resultados[0]
-			valor_extaido = valor[0]
-			curinsert.close()
-			cursordireccion.close()	
-			return str(valor_extaido)
-		else:
-			return -1 
+			if len(resultados) != 0: 			
+				valor = resultados[0]
+				curinsert.close()
+				cursordireccion.close()	
+				return str(valor)
+			else:
+				return -1 
 
 	curinsert.close()
 	cursordireccion.close()	
@@ -84,7 +93,7 @@ def f_dame_id_empresa():
 	for resultado in resultados:
 		newidempresa = resultado[0]
 		print('07 - El nuevo IDEMPRESA retornado ES: ', newidempresa)
-		f.write('07 - El nuevo  IDEMPRESA retornado ES:' + str(newidempresa))
+		f.write('07 - El nuevo  IDEMPRESA retornado ES:' + str(newidempresa)  + '\n')
 
 	cursoridempresa.close()
 	return newidempresa		
@@ -118,7 +127,12 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 		if not isinstance(fechaconvenio, datetime):
 			fechaconvenio = datetime.now()
 
-		proveedor = str(proveedor)
+		proveedor = str(proveedor)[:1]
+
+		if len(observaciones) > 0:
+			observaciones = observaciones + ' De empresa escuela'
+		else:
+			observaciones = 'De empresa escuela'
 			
 		sql = "INSERT INTO ge_empresas (idempresa, cif, empresa, observaciones, convenio, fechaconvenio, web, interesadobolsa, pdb, cliente, proveedor) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 		val = (idempresanew, cif, nombre, observaciones, convenio, fechaconvenio, web, interesados, pdb, cliente, proveedor)
@@ -133,7 +147,7 @@ def f_alta_empresa(cif, nombre, convenio, fechaconvenio, web, observaciones, int
 		return idempresanew
 
 # 00 - Generamos el archivo de salida para llevar registro del LOG: archivo-salida.py
-f = open ('data/log_salida.txt','w', encoding='utf-8')
+f = open ('data/log_salida_empresas.txt','w', encoding='utf-8')
 f.write('****** EMPEZAMOS CON LAS EMPRESAS '+ '\n')
 
 fi = open ('data/log_empresas_insertados.txt','w', encoding='utf-8')
@@ -141,6 +155,7 @@ fe = open ('data/log_empresas_encontrados.txt','w', encoding='utf-8')
 
 # 01 - Cogemos los datos de las empresas y los pasamos a un excel 
 df_empresa = pd.DataFrame()
+
 """
 # Esta es la forma de Alvaro y se lee mal 
 fichero = open('data/clientes.csv', 'r')
@@ -208,7 +223,13 @@ for i in range(len(df_empresa)):
 			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
-			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			if domicilio!=-1:
+				contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			else:
+				print('03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección')
+				f.write("03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + "\n")
+				fe.write("03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + '\n')
+			
 	else:
 		
 		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
@@ -230,13 +251,21 @@ for i in range(len(df_empresa)):
 			else:
 				nombrecompleto = nombreempresa
 
-			if nombreempresa != df_empresa.iloc[i]['razonsocial']:
+			if nombreempresa != df_empresa.iloc[i]['razonsocial'] and str(df_empresa.iloc[i]['razonsocial']) != 0:
 				nombrecompleto += ' ' + str(df_empresa.iloc[i]['razonsocial']) 
 
 			idempresanew = f_alta_empresa(df_empresa.iloc[i]['cif'], nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'] , df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
-			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			
+			if domicilio!=-1:
+				contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
+			else:
+				print('05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección')
+				f.write("05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + "\n")
+				fe.write("05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + '\n')
+			
+
 
 # 99 - Cerramos todo lo que quede abierto 			
 cursor.close()
