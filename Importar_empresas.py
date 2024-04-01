@@ -26,6 +26,8 @@ def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
 	print('10 - Vamos a actualizar la empresa: ', empresa)
 	f.write('09 - Vamos a actualizar la empresa: ' + empresa + '\n' )		
 
+	proveedor = str(proveedor)[:1]
+
 	curupdate = conn.cursor()
 	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s WHERE idempresa = %s"
 	val = (interesado, pdb, cliente, proveedor, empresa)
@@ -77,6 +79,9 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 
 	if telefono == 0:
 		telefono = ' '		
+
+	print('08 - Buscamos el domicilio del email: ****************** ', email)
+	f.write('08 - Buscamos el domicilio del email:  ****************** ' + str(email) + '\n')
 
 	cursordireccion = conn.cursor()
 	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))

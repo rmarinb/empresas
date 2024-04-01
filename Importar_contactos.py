@@ -1,4 +1,3 @@
-
 # Importamos los contactos de las empresas
 
 import 	pandas as pd
@@ -15,7 +14,8 @@ def f_dame_especialidad(fc, conn, idespecial):
 	resultados = cursorespecial.fetchall()
 
 	for resultado in resultados:
-		codigo = codigo +  ' / ' + str(resultado[0]) 	
+		if codigo != str(resultado[0]):
+			codigo = codigo +  ' / ' + str(resultado[0]) 	
 
 	cursorespecial.close()
 	return codigo		
@@ -30,7 +30,8 @@ def f_update_contacto(fc, conn, contacto, especialidad):
 	if len(especialidad) == 0:
 		especialidad = 'FORM'
 	else:
-		especialidad += ' / FORM'
+		if especialidad != 'FORM':
+			especialidad += ' / FORM'
 
 	sql = "UPDATE ge_contactos SET especialidad = %s WHERE idcontacto = %s"
 	val = (especialidad, contacto)
@@ -93,7 +94,11 @@ def	f_alta_contacto(conn, fc, domicilio, telefono1, telefono2, departamento, car
 		dn = ' ' 
 
 	if str(especialidad) != '0':
-		especialida = f_dame_especialidad(fc, conn, especialidad) + ' / FORM'
+		e = f_dame_especialidad(fc, conn, especialidad)
+		if e != 'FORM':
+			especialida = e  + ' / FORM'
+		else:
+			especialida = e
 	else:
 		especialida = 'FORM'
 		
