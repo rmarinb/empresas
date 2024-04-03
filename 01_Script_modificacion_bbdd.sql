@@ -7,6 +7,8 @@ CREATE TABLE `empresas`.`especialidad` (
   `codigo` VARCHAR(10) NULL,
   PRIMARY KEY (`idespecialidad`));
 
+
+
 # Editamos la tabla para meter la columna de codespecialidad
 
 ALTER TABLE `empresas`.`especialidad` 
