@@ -22,15 +22,16 @@ def f_dame_especialidad(idespecial):
 	return codigo		
 
 # Función que dada una empresa, actualiza los datos propios de empresa
-def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
+def f_update_empresa(empresa, interesado, pdb, cliente, proveedor, especialidad):
 	print('10 - Vamos a actualizar la empresa: ', empresa)
 	f.write('09 - Vamos a actualizar la empresa: ' + empresa + '\n' )		
 
 	proveedor = str(proveedor)[:1]
+	especialidad = especialidad + '/ FORM' 
 
 	curupdate = conn.cursor()
-	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s WHERE idempresa = %s"
-	val = (interesado, pdb, cliente, proveedor, empresa)
+	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s, especialidad = %s  WHERE idempresa = %s"
+	val = (interesado, pdb, cliente, proveedor, especialidad, empresa)
 	curupdate.execute(sql, val)
 	conn.commit()
 
@@ -237,15 +238,16 @@ for i in range(len(df_empresa)):
 		f.write("03 -  No tiene CIF, vamos a trabajar con su nombre: " +  nombreempresa + "\n" )
 		
 		# 03a - Miramos si existe o no en la bbdd po nombre
-		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE empresa like %s", ("%" + nombreempresa+ "%",))
+		cursor.execute("SELECT CAST(idempresa as char), especialidad FROM ge_empresas WHERE empresa like %s", ("%" + nombreempresa+ "%",))
 
 		resultados = cursor.fetchall()
 		for resultado in resultados:
 			idempresa = resultado[0]
+			especialidad = resultado[1]
 			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', idempresa)
 			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + idempresa + "\n")
 			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + idempresa + '\n')		
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'], especialidad)	
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:
@@ -261,32 +263,28 @@ for i in range(len(df_empresa)):
 			idempresanew = f_alta_empresa('0', nombrecompleto, df_empresa.iloc[i]['convenio'] , df_empresa.iloc[i]['conveniofecha'] , df_empresa.iloc[i]['web'], df_empresa.iloc[i]['observaciones'], df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'], df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
-			if domicilio!=-1:
-				contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
-			else:
-				print('03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección')
-				f.write("03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + "\n")
-				fe.write("03b - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + '\n')
-			
+			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
 	else:
 		
 		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
 		print("04 - La variable no es nula y tiene el valor:", cifempresa)		
 		f.write('04 - ********************** CIF:' +  cifempresa + '\n') 
-		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE cif= %s", (cifempresa,))
+		cursor.execute("SELECT CAST(idempresa as char), especialidad FROM ge_empresas WHERE cif= %s", (cifempresa,))
 				
 		# 05 - Obtener los datos de la empresa existente o no en la tabla
 		resultados = cursor.fetchall()
 		for resultado in resultados:	
 			idempresa =	resultado[0]
+			especialidad = resultado[1]
 			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', idempresa)
 			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + str(idempresa) + "\n")
 			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + str(idempresa) + '\n')
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'], especialidad )	
 
 
 		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 
-		if len(resultados)==0:			
+		if len(resultados)==0:	
+
 			if df_empresa.iloc[i]['apellidos'] != 0:
 				nombrecompleto = nombreempresa + ' ' + df_empresa.iloc[i]['apellidos'] 
 			else:
@@ -299,14 +297,7 @@ for i in range(len(df_empresa)):
 			especialidad = f_dame_especialidad(df_empresa.iloc[i]['idespecialidad'])
 			domicilio = f_alta_domicilio(idempresanew, df_empresa.iloc[i]['domicilio'], df_empresa.iloc[i]['cp'], df_empresa.iloc[i]['provincia'], df_empresa.iloc[i]['municipio'], df_empresa.iloc[i]['telefono'], df_empresa.iloc[i]['email'], especialidad)
 			
-			if domicilio!=-1:
-				contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)
-			else:
-				print('05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección')
-				f.write("05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + "\n")
-				fe.write("05 - No hemos podido meter ni domicilio ni contacto porque no venía correcta la dirección " + '\n')
-			
-
+			contact.f_contactos(df_empresa.iloc[i]['idcliente'], domicilio)			
 
 # 99 - Cerramos todo lo que quede abierto 			
 cursor.close()
