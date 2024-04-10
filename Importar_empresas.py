@@ -22,16 +22,15 @@ def f_dame_especialidad(idespecial):
 	return codigo		
 
 # Función que dada una empresa, actualiza los datos propios de empresa
-def f_update_empresa(empresa, interesado, pdb, cliente, proveedor, especialidad):
+def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
 	print('10 - Vamos a actualizar la empresa: ', empresa)
 	f.write('09 - Vamos a actualizar la empresa: ' + empresa + '\n' )		
 
 	proveedor = str(proveedor)[:1]
-	especialidad = especialidad + '/ FORM' 
-
+	
 	curupdate = conn.cursor()
-	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s, especialidad = %s  WHERE idempresa = %s"
-	val = (interesado, pdb, cliente, proveedor, especialidad, empresa)
+	sql = "UPDATE ge_empresas SET interesadobolsa = %s, pdb = %s, cliente = %s, proveedor = %s WHERE idempresa = %s"
+	val = (interesado, pdb, cliente, proveedor, empresa)
 	curupdate.execute(sql, val)
 	conn.commit()
 
@@ -52,7 +51,7 @@ def f_update_domicilio(domicilio):
 		
 	if len(resultados) > 0:
 		for fila in resultados:
-			especialidad = str(fila[0]) + "\FORM"
+			especialidad = str(fila[0]) + " \ FORM"
 			curupdate = conn.cursor()
 			sql = "UPDATE ge_domicilios SET especialidad = %s WHERE iddomicilio = %s"
 			val = (especialidad, domicilio)
@@ -238,16 +237,15 @@ for i in range(len(df_empresa)):
 		f.write("03 -  No tiene CIF, vamos a trabajar con su nombre: " +  nombreempresa + "\n" )
 		
 		# 03a - Miramos si existe o no en la bbdd po nombre
-		cursor.execute("SELECT CAST(idempresa as char), especialidad FROM ge_empresas WHERE empresa like %s", ("%" + nombreempresa+ "%",))
+		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE empresa like %s", ("%" + nombreempresa+ "%",))
 
 		resultados = cursor.fetchall()
 		for resultado in resultados:
 			idempresa = resultado[0]
-			especialidad = resultado[1]
 			print('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA: ****************** ', idempresa)
 			f.write('03a - La empresa ya existe en la base de datos. NO INSERTAMOS. ID_EMPRESA:  ****************** ' + idempresa + "\n")
 			fe.write('Entrontrado:  ' + nombreempresa + ', con el ID_EMPRESA ' + idempresa + '\n')		
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'], especialidad)	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'])	
 
 		# 03b - Si no existe registro en la tabla, lo tendremos que dar de alta 
 		if len(resultados)==0:
@@ -269,17 +267,16 @@ for i in range(len(df_empresa)):
 		# 04 - Comprobamos si el CIF ya está metido en la BBDD o no: 
 		print("04 - La variable no es nula y tiene el valor:", cifempresa)		
 		f.write('04 - ********************** CIF:' +  cifempresa + '\n') 
-		cursor.execute("SELECT CAST(idempresa as char), especialidad FROM ge_empresas WHERE cif= %s", (cifempresa,))
+		cursor.execute("SELECT CAST(idempresa as char) FROM ge_empresas WHERE cif= %s", (cifempresa,))
 				
 		# 05 - Obtener los datos de la empresa existente o no en la tabla
 		resultados = cursor.fetchall()
 		for resultado in resultados:	
 			idempresa =	resultado[0]
-			especialidad = resultado[1]
 			print('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA: ****************** ', idempresa)
 			f.write('05 - La empresa ya existe en la base de datos. NO INSERTAMOS. IDEMPRESA:  ****************** ' + str(idempresa) + "\n")
 			fe.write('Entrontrado:  ' + cifempresa + ' ' + nombreempresa + ' ' + str(idempresa) + '\n')
-			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'], especialidad )	
+			f_update_empresa(idempresa,df_empresa.iloc[i]['interesadosbolsa'], df_empresa.iloc[i]['pdb'] , df_empresa.iloc[i]['cliente'], df_empresa.iloc[i]['proveedor'] )	
 
 
 		# 06 - Si no existe registro en la tabla, lo tendremos que dar de alta 
