@@ -34,6 +34,17 @@ def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
 	curupdate.execute(sql, val)
 	conn.commit()
 
+	# Hay que marcar los contactos y los domicilios como que son de formación
+	sql = "update ge_domicilios set especialidad = concat(especialidad, '/FORM') where idempresa = %s"
+	val = (empresa)
+	curupdate.execute(sql, val)
+	conn.commit()
+
+	sql = "update ge_contactos set especialidad = concat(especialidad, '/FORM') where iddomicilio in ( select iddomicilio from ge_domicilios where idempresa = %s)"
+	val = (empresa)
+	curupdate.execute(sql, val)
+	conn.commit()
+
 	print("10 - Registro actualizado de la empresa: " , str(empresa))
 	f.write('10 - Registro actualizado de la empresa '+ str(empresa) + '************ \n')
 
@@ -83,9 +94,14 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	print('08 - Buscamos el domicilio del email: ****************** ', email)
 	f.write('08 - Buscamos el domicilio del email:  ****************** ' + str(email) + '\n')
 
-	cursordireccion = conn.cursor()
-	cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
-	resultados = cursordireccion.fetchall()
+	if email != '' and email != '0':
+		cursordireccion = conn.cursor()
+		cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
+		resultados = cursordireccion.fetchall()
+	else:
+		cursordireccion = conn.cursor()
+		cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE domicilio like %s", ("%" + str(domicilio)+ "%",))
+		resultados = cursordireccion.fetchall()
 
 	for resultado in resultados:
 		domicilio = resultado[0]
