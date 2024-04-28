@@ -36,12 +36,12 @@ def f_update_empresa(empresa, interesado, pdb, cliente, proveedor):
 
 	# Hay que marcar los contactos y los domicilios como que son de formación
 	sql = "update ge_domicilios set especialidad = concat(especialidad, '/FORM') where idempresa = %s"
-	val = (empresa)
+	val = (empresa,)
 	curupdate.execute(sql, val)
 	conn.commit()
 
 	sql = "update ge_contactos set especialidad = concat(especialidad, '/FORM') where iddomicilio in ( select iddomicilio from ge_domicilios where idempresa = %s)"
-	val = (empresa)
+	val = (empresa,)
 	curupdate.execute(sql, val)
 	conn.commit()
 
@@ -103,13 +103,14 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 		cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE domicilio like %s", ("%" + str(domicilio)+ "%",))
 		resultados = cursordireccion.fetchall()
 
-	for resultado in resultados:
-		domicilio = resultado[0]
-		print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', domicilio)
-		f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(domicilio) + '\n')		
-		f_update_domicilio(domicilio)
-		cursordireccion.close()	
-		return str(resultado[0])
+	if len(resultados)!=0:
+		for resultado in resultados:
+			domicilio = resultado[0]
+			print('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO: ****************** ', domicilio)
+			f.write('08 - La dirección ya existe en la BBDD. NO INSERTAMOS. ID_DOMICILIO:  ****************** ' + str(domicilio) + '\n')		
+			f_update_domicilio(domicilio)
+			cursordireccion.close()	
+			return str(resultado[0])
 
 	# 08 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 	if len(resultados)==0:
