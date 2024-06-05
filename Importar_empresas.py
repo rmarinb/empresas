@@ -1,4 +1,3 @@
-
 # Importamos las empresas desde el csv a la bbdd de empresas, tabla GE_EMPRESAS y GE_DOMICILIOS 
 
 import 	pandas as pd
@@ -94,7 +93,7 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 	print('08 - Buscamos el domicilio del email: ****************** ', email)
 	f.write('08 - Buscamos el domicilio del email:  ****************** ' + str(email) + '\n')
 
-	if email != '' and email != '0':
+	if email != '' and email != '0' and email != 0:
 		cursordireccion = conn.cursor()
 		cursordireccion.execute("SELECT iddomicilio FROM ge_domicilios WHERE email like %s", ("%" + str(email)+ "%",))
 		resultados = cursordireccion.fetchall()
@@ -111,7 +110,7 @@ def f_alta_domicilio(idempresa, domicilio, cp, provincia, localidad, telefono, e
 			f_update_domicilio(domicilio)
 			cursordireccion.close()	
 			return str(resultado[0])
-
+	
 	# 08 - Si no existe registro en la tabla, lo tendremos que dar de alta 
 	if len(resultados)==0:
 
