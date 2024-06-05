@@ -57,3 +57,7 @@ UPDATE GE_EMPRESAS
 SET PDB=1 
 WHERE IDEMPRESA > 3000
 
+# La especialidad de los contactos se quedaba escasa con 75 y lo pasamos a 100
+ALTER TABLE `empresas`.`ge_contactos` 
+CHANGE COLUMN `especialidad` `especialidad` VARCHAR(100) CHARACTER SET 'utf8mb4' NOT NULL ;
+
